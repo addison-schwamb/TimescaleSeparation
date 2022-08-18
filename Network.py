@@ -22,20 +22,20 @@ class Network:
             x = 0.1*rng.randn(N,1)
             wf = (1. * rng.randn(N, model_params['d_output'])) / model_params['fb_var']
             wi = (1. * rng.randn(N, model_params['d_input'])) / model_params['input_var']
-            wfd = (1. * rng.randn(N, model_params['d_input'])) / model_params['fb_var']
+            wfd = (1. * rng.randn(N, model_params['d_dummy'])) / model_params['fb_var']
         
         elif train_params['init_dist'] == 'Uniform':
             print('Uniform Initialization')
             x = 0.1 * (2 * rng.rand(N,1) - 1)
             wf = (2 * rng.rand(N, model_params['d_output']) - 1) / model_params['fb_var']
             wi = (2 * rng.rand(N, model_params['d_input']) - 1) / model_params['input_var']
-            wfd = (2 * rng.rand(N, model_params['d_input']) - 1) / model_params['fb_var']
+            wfd = (2 * rng.rand(N, model_params['d_dummy']) - 1) / model_params['fb_var']
             
         else:
             print('Invalid Distribution: Supported distributions are \'Gauss\' and \'Uniform\'')
         
         wo = np.zeros([N, model_params['d_output']])
-        wd = np.zeros([N, model_params['d_input']])
+        wd = np.zeros([N, model_params['d_dummy']])
         
         JT = model_params['g']*J + np.matmul(wf, wo.T) + np.matmul(wfd, wd.T)
         model_prs = {'JT': JT, 'Pw': Pw, 'Pd': Pd, 'J': J, 'x': x, 'wf': wf, 'wo': wo, 'wfd': wfd, 'wd': wd, 'wi': wi}
@@ -55,8 +55,6 @@ class Network:
         wd = self.params['wd']
         r = np.tanh(self.x)
         
-        print(np.shape(wi)[1])
-        print(np.shape(input)[0])
         if np.shape(wi)[1] < np.shape(input)[0]:
             dx = -self.x + np.matmul(JT, r) + np.matmul(np.concatenate((np.ones([np.shape(wi)[0],1]),wi),axis=1),input.reshape(-1,1))
         else:

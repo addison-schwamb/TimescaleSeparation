@@ -21,6 +21,7 @@ def set_all_parameters( g, pg, fb_var, dt, input_var,  n_train, encoding, seed, 
     slow_net_params = dict()
     slow_net_params['d_input'] = 4
     slow_net_params['d_output'] = 1
+    slow_net_params['d_dummy'] = 2
     slow_net_params['tau'] = 1
     slow_net_params['dt'] = dt[0]
     slow_net_params['g'] = g[0]
@@ -33,6 +34,7 @@ def set_all_parameters( g, pg, fb_var, dt, input_var,  n_train, encoding, seed, 
     fast_net_params = dict()
     fast_net_params['d_input'] = 3
     fast_net_params['d_output'] = 1
+    fast_net_params['d_dummy'] = 2
     fast_net_params['tau'] = 1
     fast_net_params['dt'] = dt[1]
     fast_net_params['g'] = g[1]
@@ -110,8 +112,9 @@ def main(d):
     fast_net = Network(fast_net_prs, train_prs, msc_prs['seed'])
     
     slow_net, fast_net, task_prs = train_time_sep(slow_net, fast_net, train_prs, task_prs, exp_mat, dummy_mat, target_mat, input_digits)
+    slow_net, fast_net, pct_correct, slow_x_ICs, slow_r_ICs, fast_x_ICs, fast_r_ICs, slow_x_mat, fast_x_mat = test(slow_net, fast_net, train_prs, task_prs, exp_mat, target_mat, input_digits)
     
-
+    print('Percent Correct: ', str(pct_correct*100), '%')
 
 
 
